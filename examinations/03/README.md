@@ -121,9 +121,13 @@ Run the exact same playbook again and study the output. What is the difference?
 
 What does the `ansible.builtin.debug` module actually do?
 
+Svar: Den debuggar.
+
 ## QUESTION B
 
 What is the variable 'ansible_facts' and where does it come from?
+
+Svar: Det är en inbygdd variabel som innehåller systeminformation som ansible automatiskt samlar in. Informationen samlas in från alla VMs.
 
 ## QUESTION C
 
@@ -134,6 +138,8 @@ How do we now remove the software we installed through the playbook above? Make 
 playbook remove the exact same software we previously installed. Call the created
 playbook `03-uninstall-software.yml`.
 
+Svar: Under state så lägger man absent istället för att skriver present.
+
 ## BONUS QUESTION
 
 What happens when you run `ansible-playbook` with different options?
@@ -142,6 +148,8 @@ Explain what each of these options do:
 * --verbose, -vv, -vvv, -vvvv
 * --check
 * --syntax-check
+
+Svar: Verbose visar information om vad ansible gör och visar vad den gör när du kör playbook. -vv -vvv -vvvv är olika nivåer. Två V visar detaljerad information om körning, tre lägger till debug information och fyra visar allting och debug information om kopplingen. Check visar förändringar utan att faktiskt köra dem. Syntax check testar körningen för eventuella syntax error.
 
 ## Study Material & Documentation
 

@@ -112,9 +112,13 @@ incompatibilities.
 
 What happens if you run `ansible-inventory --list` in the directory you created above?
 
+Svar: Du får alla servers i en stor lista. Du får ip address, hostname och ssh nyckeln som de använder
+
 ## QUESTION B
 
 What happens if you run `ansible-inventory --graph` in the directory you created above?
+
+Svar: Du får en träd strukturerad lista över ansible strukturen.
 
 ## QUESTION C
 
@@ -131,6 +135,8 @@ Now run:
 Study the output of this command.
 
 What does the `ansible_connection=local` part mean?
+
+Svar: Får samma svar när jag pingar. Kommandot kopplar till min lokala maskins ip adress.
 
 ## BONUS QUESTION
 
@@ -153,3 +159,4 @@ In your Ansible working directory where the `ansible.cfg' is, run
 You should get a pager displaying all available configuration values. How does it differ
 from when you run the same command in your usual home directory?
 
+Svar: När jag kör dump i min home visar den configurations för min lokala ansible config fil men i min directory visar den mina configurations

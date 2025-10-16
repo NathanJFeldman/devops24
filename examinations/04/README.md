@@ -1,4 +1,4 @@
-# Examination 4 - Install a Web Server
+   xamination 4 - Install a Web Server
 
 Now that we know how to install software on a machine through Ansible, we can
 begin to look at how to set up a machine with services.
@@ -53,6 +53,8 @@ module.
 
 How can we make the web server start with an addition of just one line to the playbook above?
 
+Svar: Längst ner under ensure nginx is running at boot lägg till raden state: started så funkar det.
+
 # QUESTION B
 
 You make have noted that the `become: true` statement has moved from a specific task to the beginning
@@ -60,9 +62,11 @@ of the playbook, and is on the same indentation level as `tasks:`.
 
 What does this accomplish?
 
+Svar: Det betyder att du använder root för hela körningen. Man kan lägga become:true lite var som beroende om du behöver root men det kan vara en säkerhetsrisk så du vill helst bara använda det när det behövs.
+
 # QUESTION C
 
-Copy the above playbook to a new playbook. Call it `04-uninstall-webserver.yml`.
+Copy the above playbook to a new playbook. Call it.
 
 Change the ordering of the two tasks. Make the web server stop, and disable it from starting at boot, and
 make sure that `nginx` is uninstalled. Change the `name:` parameter of each task accordingly.
@@ -72,8 +76,12 @@ log in to the machine and make sure that there are no `nginx` processes running.
 
 Why did we change the order of the tasks in the `04-uninstall-webserver.yml` playbook?
 
+Svar: Vi stoppar nginx tjänsten innan vi avinstallerar så vi kan säkerställa att det inte finns något kvarstående från nginx processen.
+
 # BONUS QUESTION
 
 Consider the output from the tasks above, and what we were actually doing on the machine.
 
 What is a good naming convention for tasks? (What SHOULD we write in the `name:` field`?)
+
+Svar: Name: ska ha beskrivande namn som är kortfattande. Man ska kunna förstå vad som händer.
