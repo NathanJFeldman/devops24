@@ -76,6 +76,8 @@ What does the output look like the first time you run this playbook?
 
 What does the output look like the second time you run this playbook?
 
+Svar: Första gånger man kör playbooken sker det 6 ändringar och andra gången inga
+
 # QUESTION B
 
 Even if we have copied the configuration to the right place, we still do not have a working https service
@@ -114,12 +116,17 @@ Again, these addresses are just examples, make sure you use the IP of the actual
 Note also that `curl` needs the `--insecure` option to establish a connection to a HTTPS server with
 a self signed certificate.
 
+
 # QUESTION C
 
 What is the disadvantage of having a task that _always_ makes sure a service is restarted, even if there is
 no configuration change?
 
+Svar: Nackdelen med att alltid starta om en tjänst är att det kan orsaka onödiga avbrott, störningar för användare. Det är bättre om du startar om någonting om någon konfiguration ändras.
+
 # BONUS QUESTION
 
 There are at least two _other_ modules, in addition to the `ansible.builtin.service` module that can restart
 a `systemd` service with Ansible. Which modules are they?
+
+Svar: ansible.builtin.systemd och ansible.builtin.command
