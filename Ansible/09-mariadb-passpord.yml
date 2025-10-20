@@ -1,0 +1,45 @@
+---
+- hosts: db
+  become: true
+  vars:
+    my_encrypted_var: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      37316230373462666661656466663636623531343234346537376331386637323931396361303334
+      3434303234313833613665363731396532643632353838360a626666383562303634316566393833
+      36336139363065356664383862303333326664353733343832376163363234353136333831373133
+      3634616232323334380a336138633839636664656633326433373731613639663466623835363534
+      65386438346262333861363438623163383037626131643133326530363437316334
+
+  tasks:
+    - name: Ensure MariaDB-server is installed.
+      ansible.builtin.package:
+        name: mariadb-server
+        state: present
+    - name: mariadb on boot
+      ansible.builtin.service:
+        name: mariadb
+        enabled: true
+        state: started
+    - name: install  python3 mysql
+      ansible.builtin.package:
+        name: python3-PyMySQL
+        state: present
+        update_cache: yes
+
+    - name: Create MariaDB user
+      community.mysql.mysql_user:
+        name: webappuser
+        password: "{{my_encrypted_var}}"
+        host: localhost
+        priv: '*.*:ALL'
+        state: present
+        login_user: root
+        login_unix_socket: /var/lib/mysql/mysql.sock
+
+    - name: Try to create database
+      community.mysql.mysql_db:
+        name: webapp
+        login_user: webappuser
+        login_password: "{{my_encrypted_var}}"
+        login_unix_socket: /var/lib/mysql/mysql.sock
+        state: present
