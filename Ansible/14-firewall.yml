@@ -1,0 +1,73 @@
+---
+- name: install firewalld och python3-firewall
+  hosts: all
+  become: true
+  tasks:
+    - name: Install firewalld
+      ansible.builtin.package:
+        name: firewalld
+        state: present
+        update_cache: yes
+
+    - name: Install python3-firewall
+      ansible.builtin.package:
+        name: python3-firewall
+        state: present
+        update_cache: yes
+
+    - name: ensure firewalld is is enabled and started
+      ansible.builtin.service:
+        name: firewalld
+        enabled: true
+        state: started
+
+
+- name: add http and https to webserver firewall
+  hosts: web
+  become: true
+  tasks:
+    - name: Permanently enable https service, also enable it immediately if possible
+      ansible.posix.firewalld:
+        service: https
+        state: enabled
+        permanent: true
+        immediate: true
+
+    - name: Permanently enable http service, also enable it immediately if possible
+      ansible.posix.firewalld:
+        service: http
+        state: enabled
+        permanent: true
+        immediate: true
+    - name: Permanently enable mysql service, also enable it immediately if possible
+      ansible.posix.firewalld:
+        service: mysql
+        state: disabled
+        permanent: true
+        immediate: true
+
+- name: add mysql to dbserver firewall
+  hosts: db
+  become: true
+  tasks:
+    - name: Permanently enable mysql service, also enable it immediately if possible
+      ansible.posix.firewalld:
+        service: mysql
+        state: enabled
+        permanent: true
+        immediate: true
+    - name: Permanently enable https service, also enable it immediately if possible
+      ansible.posix.firewalld:
+        service: https
+        state: disabled
+        permanent: true
+        immediate: true
+
+    - name: Permanently enable http service, also enable it immediately if possible
+      ansible.posix.firewalld:
+        service: http
+        state: disabled
+        permanent: true
+        immediate: true
+
+

@@ -1,0 +1,44 @@
+---
+# tasks file for dbserver
+- name: Ensure MariaDB-server is installed.
+  ansible.builtin.package:
+    name: mariadb-server
+    state: present
+- name: mariadb on boot
+  ansible.builtin.service:
+    name: mariadb
+    enabled: true
+    state: started
+- name: install  python3 mysql
+  ansible.builtin.package:
+    name: python3-PyMySQL
+    state: present
+    update_cache: yes
+
+- name: Create MariaDB user
+  community.mysql.mysql_user:
+    name: webappuser
+    password: "{{my_encrypted_var}}"
+    host: localhost
+    priv: '*.*:ALL'
+    state: present
+    login_user: root
+    login_unix_socket: /var/lib/mysql/mysql.sock
+
+- name: Try to create database
+  community.mysql.mysql_db:
+    name: webapp
+    login_user: webappuser
+    login_password: "{{my_encrypted_var}}"
+    login_unix_socket: /var/lib/mysql/mysql.sock
+    state: present
+- name: kopiera md filer från files till deploy directory
+  ansible.builtin.copy:
+    src: "{{item}}"
+    dest: "/home/deploy/{{item | basename }}"
+    owner: deploy
+    group: deploy
+    mode: "0644"
+  with_fileglob:
+    - files/[1-4].md
+#

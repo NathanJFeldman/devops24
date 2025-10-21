@@ -1,0 +1,50 @@
+---
+- name: Ensure nginx is installed
+  ansible.builtin.package:
+    name: nginx
+    state: present
+
+- name: Ensure nginx is enabled at boot
+  ansible.builtin.service:
+    name: nginx
+    enabled: true
+
+- name: Deploy HTTPS configuration file from template
+  ansible.builtin.template:
+    src: example.internal.conf.j2
+    dest: /etc/nginx/conf.d/example.internal.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: reload nginx
+
+- name: Check nginx config syntax
+  ansible.builtin.command: nginx -t
+  register: nginx_test
+  ignore_errors: yes
+
+- name: Fail if nginx config test failed
+  ansible.builtin.fail:
+    msg: "Nginx config test failed: {{ nginx_test.stderr }}"
+  when: nginx_test.rc != 0
+
+- name: Create a directory structure under /var/www/example.internal
+  ansible.builtin.file:
+    path: /var/www/example.internal/html
+    state: directory
+    mode: '0755'
+
+- name: Upload files/index.html to /var/www/example.internal/html
+  ansible.builtin.copy:
+    src: files/index.html
+    dest: /var/www/example.internal/html/index.html
+    owner: root
+    group: root
+    mode: '0644'
+  register: result
+  notify: reload nginx
+
+- name: Debug upload result
+  ansible.builtin.debug:
+    var: result
+

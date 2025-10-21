@@ -1,0 +1,13 @@
+---
+- hosts: db
+  become: true
+  tasks:
+  - name: kopiera md filer från files till deploy directory
+    ansible.builtin.copy:
+      src: "{{item}}"
+      dest: "/home/deploy/{{item | basename }}"
+      owner: deploy
+      group: deploy
+      mode: "0644"
+    with_fileglob:
+      - files/[1-4].md

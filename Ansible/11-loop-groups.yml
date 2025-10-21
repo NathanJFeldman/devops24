@@ -1,0 +1,18 @@
+---
+- hosts: web
+  become: true
+  vars_files:
+    - vault_users.yml
+  tasks:
+   - name: add users to groups
+     ansible.builtin.user:
+       name: "{{item.name}}"
+       state: present
+       groups: "{{item.groups | default(omit)}}"
+       comment: "{{item.gecos}}"
+       password: "{{item.password}}"
+     loop:
+       - { name: alovelace, groups: [wheel, audio, video], gecos: "Ada Lovelace", password: "$6$rounds=656000$mysecretsalt$.eNM1ZJfq/ia987d11Zo4PGvKRbL7zwWqsxKBpLGGtTmt8bqmWECBvMYHW8grUoSYqkuFLLQjyWzti3fUvMKy/"}
+       - { name: aturing, groups: tape, gecos: "Alan Turing", password: "$6$rounds=656000$mysecretsalt$kk8LQ.zLevstdGbiHuMsy1gQV1PbjG8RGODKw/.kduciEkm9V7PvqqMPsb5uOh8Wa.6P7RtJ4xPknzqkK8KjL1"}
+       - { name: edijkstra, groups: tcpdump, gecos: "Edsger W. Dijkstra", password: "$6$rounds=656000$mysecretsalt$kk8LQ.zLevstdGbiHuMsy1gQV1PbjG8RGODKw/.kduciEkm9V7PvqqMPsb5uOh8Wa.6P7RtJ4xPknzqkK8KjL1" }
+       - { name: ghopper, groups: [wheel,audio], gecos: "Grace Hopper", password: "$6$rounds=656000$mysecretsalt$kk8LQ.zLevstdGbiHuMsy1gQV1PbjG8RGODKw/.kduciEkm9V7PvqqMPsb5uOh8Wa.6P7RtJ4xPknzqkK8KjL1"}
