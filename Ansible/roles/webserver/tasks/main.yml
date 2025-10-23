@@ -44,6 +44,7 @@
   register: result
   notify: reload nginx
 
+
 - name: Debug upload result
   ansible.builtin.debug:
     var: result

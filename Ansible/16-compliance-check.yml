@@ -1,0 +1,95 @@
+---
+- name: simple cis checks
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+
+    - name: read ssh config
+      ansible.builtin.slurp:
+        src: /etc/ssh/sshd_config
+      register: sshd_config
+      ignore_errors: yes
+
+    - name: ssh root login
+      ansible.builtin.assert:
+        that:
+          - "'PermitRootLogin no' in (sshd_config.content | b64decode).split('\n')"
+        fail_msg: "root login enabled"
+        success_msg: "root login disabled"
+      ignore_errors: yes
+
+    - name: check telnet package
+      ansible.builtin.package_facts:
+      register: pkg_facts
+
+    - name: telnet not installed
+      ansible.builtin.assert:
+        that:
+          - "'telnet-server' not in ansible_facts.packages"
+        fail_msg: "telnet-server installed"
+        success_msg: "telnet-server not installed"
+      ignore_errors: yes
+
+    - name: check rsh package
+      ansible.builtin.assert:
+        that:
+          - "'rsh-server' not in ansible_facts.packages"
+        fail_msg: "rsh-server installed"
+        success_msg: "rsh-server not installed"
+      ignore_errors: yes
+
+    - name: check permissions ssh config
+      ansible.builtin.stat:
+        path: /etc/ssh/sshd_config
+      register: sshd_stat
+      ignore_errors: yes
+
+    - name: ssh config perms
+      ansible.builtin.assert:
+        that:
+          - sshd_stat.stat.mode | int(base=8) <= 644
+        fail_msg: "sshd_config perms too open"
+        success_msg: "sshd_config perms okay"
+      ignore_errors: yes
+
+    - name: check root .rhosts
+      ansible.builtin.stat:
+        path: /root/.rhosts
+      register: rhosts_stat
+      ignore_errors: yes
+
+    - name: root .rhosts not present
+      ansible.builtin.assert:
+        that:
+          - rhosts_stat.stat.exists == false
+        fail_msg: ".rhosts exists"
+        success_msg: ".rhosts does not exist"
+      ignore_errors: yes
+
+    - name: check core dumps disabled
+      ansible.builtin.command: sysctl fs.suid_dumpable
+      register: core_dump
+      ignore_errors: yes
+
+    - name: core dumps off
+      ansible.builtin.assert:
+        that:
+          - "'fs.suid_dumpable = 0' in core_dump.stdout"
+        fail_msg: "core dumps enabled"
+        success_msg: "core dumps disabled"
+      ignore_errors: yes
+
+    - name: check world writable files
+      ansible.builtin.command: find / -xdev -type f -perm -0002
+      register: world_writable
+      ignore_errors: yes
+
+    - name: no world writable files
+      ansible.builtin.assert:
+        that:
+          - world_writable.stdout == ""
+        fail_msg: "world writable files exist"
+        success_msg: "no world writable files"
+      ignore_errors: yes
+

@@ -45,6 +45,12 @@
         state: disabled
         permanent: true
         immediate: true
+    - name: add node exporter to firewall
+      ansible.builtin.firewalld:
+        port: 9100/tcp
+        state: enabled
+        permanent: true
+        immediate: true
 
 - name: add mysql to dbserver firewall
   hosts: db
@@ -69,5 +75,10 @@
         state: disabled
         permanent: true
         immediate: true
-
-
+    - name: add node exporter to firewall
+      ansible.builtin.firewalld:
+        port: 9100/tcp
+        state: enabled
+        permanent: true
+        immediate: true
+  
