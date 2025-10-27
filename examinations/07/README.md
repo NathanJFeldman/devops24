@@ -28,6 +28,10 @@ is run.
 When you have run the playbook above successfully, how can you verify that the `mariadb`
 service is started and is running?
 
+Svar: Sudo systemctl status mariadb
+
 # BONUS QUESTION
 
 How many different ways can use come up with to verify that the `mariadb` service is running?
+ 
+Svar: Du kan använda flera andra olika kommands som till exempel: service mariadb status, mysqladmin ping och mysql -u root -p.

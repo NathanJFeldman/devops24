@@ -180,4 +180,4 @@ would you like the flow to work?
 Describe in simple terms what your preferred task flow would look like, not necessarily implemented in
 Ansible, but in general terms.
 
-
+Svar: Förbereda och validera allting först. Lägg ihop allting till ett då när jag startar om så jag slipper starta om flera gånger och skicka ut uppdateringarna gradvis så att man slipper nertid.
